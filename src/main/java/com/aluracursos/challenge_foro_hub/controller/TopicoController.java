@@ -10,8 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.aluracursos.challenge_foro_hub.domain.topico.DatosDetalleTopico;
 import com.aluracursos.challenge_foro_hub.domain.topico.DatosRegistroTopico;
-import com.aluracursos.challenge_foro_hub.domain.topico.Topico;
-import com.aluracursos.challenge_foro_hub.domain.topico.TopicoRepository;
+import com.aluracursos.challenge_foro_hub.domain.topico.TopicoService;
 
 import jakarta.validation.Valid;
 
@@ -20,14 +19,13 @@ import jakarta.validation.Valid;
 public class TopicoController {
 
     @Autowired
-    private TopicoRepository repository;
+    private TopicoService topicoService;
 
     @PostMapping
     public ResponseEntity<DatosDetalleTopico> registrarNuevoTopico(@RequestBody @Valid DatosRegistroTopico datos, UriComponentsBuilder uriComponentsBuilder) {
-        var topico = new Topico(datos);
-        repository.save(topico);
-        var uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
-        return ResponseEntity.created(uri).body(new DatosDetalleTopico(topico));
+        var datosDetalleTopico = topicoService.nuevoTopico(datos);
+        var uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(datosDetalleTopico.id()).toUri();
+        return ResponseEntity.created(uri).body(datosDetalleTopico);
     }
 
 }

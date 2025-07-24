@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.aluracursos.challenge_foro_hub.domain.ValidacionException;
+
 
 @RestControllerAdvice
 public class GestorDeErrores {
@@ -25,6 +27,11 @@ public class GestorDeErrores {
         return ResponseEntity.badRequest().body(errores.stream()
             .map(DatosErrorValidacion::new)
             .toList());
+    }
+
+    @ExceptionHandler(ValidacionException.class)
+    public ResponseEntity<String> gestionarErrorDeValidacion(ValidacionException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
      public record DatosErrorValidacion(
