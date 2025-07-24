@@ -39,10 +39,10 @@ public class Topico {
     private String curso;
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
+    @Enumerated(EnumType.STRING)
+    private Estado estado;
     // @Column(name = "ultima_actualizacion")
     // private LocalDateTime ultimaActualizacion;
-    // @Enumerated(EnumType.STRING)
-    // private Estado estado;
     // private List<Respuesta> respuestas;
 
     public Topico(DatosRegistroTopico datos, Usuario usuario) {
@@ -52,6 +52,7 @@ public class Topico {
         this.mensaje = datos.mensaje();
         this.curso = datos.curso();
         this.fechaCreacion = LocalDateTime.now();
+        this.estado = Estado.OPEN;
     }
 
 }

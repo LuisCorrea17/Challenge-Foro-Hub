@@ -1,5 +1,8 @@
 package com.aluracursos.challenge_foro_hub.domain.topico;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,13 @@ public class TopicoService {
         Topico topico = new Topico(datos, usuario);
         topicoRepository.save(topico);
         return new DatosDetalleTopico(topico);
+    }
+
+    public List<DatosDetalleTopico> listarTopicos() {
+        var topicos = topicoRepository.findAll();
+        return topicos.stream()
+            .map(t -> new DatosDetalleTopico(t))
+            .collect(Collectors.toList());
     }
 
 }
