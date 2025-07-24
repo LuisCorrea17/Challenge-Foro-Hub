@@ -74,4 +74,8 @@ public class Topico {
 
     }
 
+    public void eliminar() {
+        this.estado = Estado.DELETED;
+    }
+
 }

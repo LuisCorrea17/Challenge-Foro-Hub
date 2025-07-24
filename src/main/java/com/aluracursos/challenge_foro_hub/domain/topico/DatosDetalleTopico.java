@@ -6,10 +6,11 @@ public record DatosDetalleTopico(
     Long id,
     String titulo,
     String mensaje,
-    LocalDateTime ultimaActualizacion
+    LocalDateTime ultimaActualizacion,
+    Estado estado
 ) {
 
     public DatosDetalleTopico(Topico topico) {
-        this(topico.getId(), topico.getTitulo(), topico.getMensaje(), topico.getUltimaActualizacion());
+        this(topico.getId(), topico.getTitulo(), topico.getMensaje(), topico.getUltimaActualizacion(), topico.getEstado());
     }
 }

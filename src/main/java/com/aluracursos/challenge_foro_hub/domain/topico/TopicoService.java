@@ -26,7 +26,7 @@ public class TopicoService {
     }
 
     public List<DatosDetalleTopico> listarTopicos() {
-        var topicos = topicoRepository.findAll();
+        var topicos = topicoRepository.listarTopicos();
         return topicos.stream()
             .map(t -> new DatosDetalleTopico(t))
             .collect(Collectors.toList());
@@ -36,6 +36,11 @@ public class TopicoService {
         var topico = topicoRepository.getReferenceById(datos.id());
         topico.actualizarInformacion(datos);
         return new DatosDetalleTopico(topico);
+    }
+
+    public void eliminarTopico(Long id) {
+        var topico = topicoRepository.getReferenceById(id);
+        topico.eliminar();
     }
 
 }
