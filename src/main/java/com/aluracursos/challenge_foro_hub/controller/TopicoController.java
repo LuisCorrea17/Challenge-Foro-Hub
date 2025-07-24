@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.aluracursos.challenge_foro_hub.domain.topico.DatosActualizacionTopico;
 import com.aluracursos.challenge_foro_hub.domain.topico.DatosDetalleTopico;
 import com.aluracursos.challenge_foro_hub.domain.topico.DatosRegistroTopico;
 import com.aluracursos.challenge_foro_hub.domain.topico.TopicoService;
@@ -37,6 +39,14 @@ public class TopicoController {
     public ResponseEntity<List<DatosDetalleTopico>> listarTopicos() {
         var topicos = topicoService.listarTopicos();
         return ResponseEntity.ok().body(topicos);
-    } 
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity<DatosDetalleTopico> actualizarTopico(@RequestBody @Valid DatosActualizacionTopico datos) {
+        var topico = topicoService.actualizarTopico(datos);
+        return ResponseEntity.ok(topico);
+    }
+
 
 }

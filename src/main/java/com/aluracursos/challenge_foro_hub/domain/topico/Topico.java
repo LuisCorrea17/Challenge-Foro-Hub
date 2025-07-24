@@ -41,8 +41,8 @@ public class Topico {
     private LocalDateTime fechaCreacion;
     @Enumerated(EnumType.STRING)
     private Estado estado;
-    // @Column(name = "ultima_actualizacion")
-    // private LocalDateTime ultimaActualizacion;
+    @Column(name = "ultima_modificacion")
+    private LocalDateTime ultimaActualizacion;
     // private List<Respuesta> respuestas;
 
     public Topico(DatosRegistroTopico datos, Usuario usuario) {
@@ -53,6 +53,25 @@ public class Topico {
         this.curso = datos.curso();
         this.fechaCreacion = LocalDateTime.now();
         this.estado = Estado.OPEN;
+        this.ultimaActualizacion = this.fechaCreacion;
+    }
+
+    public void actualizarInformacion(DatosActualizacionTopico datos) {
+        
+        if (datos.titulo() != null) {
+            this.titulo = datos.titulo();
+        }
+
+        if (datos.mensaje() != null) {
+            this.mensaje = datos.mensaje();
+        }
+
+        if (datos.estado() != null) {
+            this.estado = datos.estado();
+        }
+
+        this.ultimaActualizacion = LocalDateTime.now();
+
     }
 
 }

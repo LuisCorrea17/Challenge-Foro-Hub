@@ -32,4 +32,10 @@ public class TopicoService {
             .collect(Collectors.toList());
     }
 
+    public DatosDetalleTopico actualizarTopico(DatosActualizacionTopico datos) {
+        var topico = topicoRepository.getReferenceById(datos.id());
+        topico.actualizarInformacion(datos);
+        return new DatosDetalleTopico(topico);
+    }
+
 }
