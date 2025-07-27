@@ -2,6 +2,7 @@ package com.aluracursos.challenge_foro_hub.domain.topico;
 
 import java.time.LocalDateTime;
 
+import com.aluracursos.challenge_foro_hub.domain.curso.Curso;
 import com.aluracursos.challenge_foro_hub.domain.usuario.Usuario;
 
 import jakarta.persistence.Column;
@@ -36,7 +37,9 @@ public class Topico {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
-    private String curso;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "curso_id")
+    private Curso curso;
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
     @Enumerated(EnumType.STRING)
@@ -45,12 +48,12 @@ public class Topico {
     private LocalDateTime ultimaActualizacion;
     // private List<Respuesta> respuestas;
 
-    public Topico(TopicoRegistroDTO datos, Usuario usuario) {
+    public Topico(TopicoRegistroDTO datos, Usuario usuario, Curso curso) {
         this.id = null;
         this.titulo = datos.titulo();
         this.usuario = usuario;
         this.mensaje = datos.mensaje();
-        this.curso = datos.curso();
+        this.curso = curso;
         this.fechaCreacion = LocalDateTime.now();
         this.estado = Estado.OPEN;
         this.ultimaActualizacion = this.fechaCreacion;

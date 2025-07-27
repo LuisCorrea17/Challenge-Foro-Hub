@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.aluracursos.challenge_foro_hub.domain.curso.Curso;
+import com.aluracursos.challenge_foro_hub.domain.curso.CursoRepository;
 import com.aluracursos.challenge_foro_hub.domain.usuario.Usuario;
 import com.aluracursos.challenge_foro_hub.domain.usuario.UsuarioRepository;
 
@@ -17,9 +19,13 @@ public class TopicoService {
     @Autowired
     private TopicoRepository topicoRepository;
 
+    @Autowired
+    private CursoRepository cursoRepository;
+
     public TopicoDetalleDTO nuevoTopico(TopicoRegistroDTO datos) {
         Usuario usuario = usuarioRepository.findById(datos.usuarioId()).get();
-        Topico topico = new Topico(datos, usuario);
+        Curso curso = cursoRepository.findById(datos.cursoId()).get();
+        Topico topico = new Topico(datos, usuario, curso);
         topicoRepository.save(topico);
         return new TopicoDetalleDTO(topico);
     }

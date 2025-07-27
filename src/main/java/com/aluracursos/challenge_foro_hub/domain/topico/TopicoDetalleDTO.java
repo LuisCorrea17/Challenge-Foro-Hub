@@ -13,6 +13,6 @@ public record TopicoDetalleDTO(
 ) {
 
     public TopicoDetalleDTO(Topico topico) {
-        this(topico.getId(), topico.getTitulo(), topico.getMensaje(), topico.getUltimaActualizacion(), topico.getEstado(), topico.getUsuario().getNombre(), topico.getCurso());
+        this(topico.getId(), topico.getTitulo(), topico.getMensaje(), topico.getUltimaActualizacion(), topico.getEstado(), topico.getUsuario().getNombre(), topico.getCurso().getNombre());
     }
 }
