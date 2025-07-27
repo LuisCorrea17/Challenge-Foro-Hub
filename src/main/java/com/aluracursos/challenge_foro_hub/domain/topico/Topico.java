@@ -45,7 +45,7 @@ public class Topico {
     private LocalDateTime ultimaActualizacion;
     // private List<Respuesta> respuestas;
 
-    public Topico(DatosRegistroTopico datos, Usuario usuario) {
+    public Topico(TopicoRegistroDTO datos, Usuario usuario) {
         this.id = null;
         this.titulo = datos.titulo();
         this.usuario = usuario;
@@ -56,7 +56,7 @@ public class Topico {
         this.ultimaActualizacion = this.fechaCreacion;
     }
 
-    public void actualizarInformacion(DatosActualizacionTopico datos) {
+    public void actualizarInformacion(TopicoActualizacionDTO datos) {
         
         if (datos.titulo() != null) {
             this.titulo = datos.titulo();

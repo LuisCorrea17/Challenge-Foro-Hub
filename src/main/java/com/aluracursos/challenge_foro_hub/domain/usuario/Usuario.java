@@ -30,7 +30,7 @@ public class Usuario {
     private LocalDateTime fechaRegistro;
     private Boolean activo;
 
-    public Usuario(DatosRegistroUsuario datos) {
+    public Usuario(UsuarioRegistroDTO datos) {
         this.id =  null;
         this.nombre = datos.nombre();
         this.email = datos.email();

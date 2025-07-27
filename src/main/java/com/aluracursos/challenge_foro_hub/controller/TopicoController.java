@@ -1,8 +1,9 @@
 package com.aluracursos.challenge_foro_hub.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.aluracursos.challenge_foro_hub.domain.topico.DatosActualizacionTopico;
-import com.aluracursos.challenge_foro_hub.domain.topico.DatosDetalleTopico;
-import com.aluracursos.challenge_foro_hub.domain.topico.DatosRegistroTopico;
+import com.aluracursos.challenge_foro_hub.domain.topico.TopicoActualizacionDTO;
+import com.aluracursos.challenge_foro_hub.domain.topico.TopicoDetalleDTO;
+import com.aluracursos.challenge_foro_hub.domain.topico.TopicoRegistroDTO;
 import com.aluracursos.challenge_foro_hub.domain.topico.TopicoService;
 
 import jakarta.validation.Valid;
@@ -31,22 +32,22 @@ public class TopicoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<DatosDetalleTopico> registrarNuevoTopico(@RequestBody @Valid DatosRegistroTopico datos, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<TopicoDetalleDTO> registrarNuevoTopico(@RequestBody @Valid TopicoRegistroDTO datos, UriComponentsBuilder uriComponentsBuilder) {
         var datosDetalleTopico = topicoService.nuevoTopico(datos);
         var uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(datosDetalleTopico.id()).toUri();
         return ResponseEntity.created(uri).body(datosDetalleTopico);
     }
 
     @GetMapping
-    public ResponseEntity<List<DatosDetalleTopico>> listarTopicos() {
-        var topicos = topicoService.listarTopicos();
-        return ResponseEntity.ok().body(topicos);
+    public ResponseEntity<Page<TopicoDetalleDTO>> listarTopicos(@PageableDefault(size = 10, sort = {"ultimaActualizacion"}) Pageable paginacion) {
+        var page = topicoService.listarTopicos(paginacion);
+        return ResponseEntity.ok(page);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<DatosDetalleTopico> actualizarTopico(@RequestBody @Valid DatosActualizacionTopico datos) {
-        var topico = topicoService.actualizarTopico(datos);
+    public ResponseEntity<TopicoDetalleDTO> actualizarTopico(@PathVariable Long id, @RequestBody @Valid TopicoActualizacionDTO datos) {
+        var topico = topicoService.actualizarTopico(id, datos);
         return ResponseEntity.ok(topico);
     }
 
@@ -57,5 +58,10 @@ public class TopicoController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<TopicoDetalleDTO> detallarTopico(@PathVariable Long id) {
+        var topico = topicoService.detallarTopico(id);
+        return ResponseEntity.ok(topico);
+    }
 
 }

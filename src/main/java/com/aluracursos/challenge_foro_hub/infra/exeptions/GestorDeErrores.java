@@ -1,8 +1,10 @@
 package com.aluracursos.challenge_foro_hub.infra.exeptions;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,14 +13,23 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.aluracursos.challenge_foro_hub.domain.ValidacionException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 
 @RestControllerAdvice
 public class GestorDeErrores {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> gestionarErrorDuplicacion(DataIntegrityViolationException ex) {
-        String mensaje = "Ya existe un tópico con el mismo título y mensaje.";
-        return ResponseEntity.badRequest().body(mensaje);
+    public ResponseEntity<ErrorResponse> gestionarErrorDuplicacion(DataIntegrityViolationException ex) {
+        String mensaje = "Ya existe un tópico con el mismo título y mensaje";
+        var error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), mensaje, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> gestionarErrorIdNoEncontrado(EntityNotFoundException ex) {
+        var error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Topico con el id no encontrado", LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -43,4 +54,6 @@ public class GestorDeErrores {
             this(error.getField(), error.getDefaultMessage());
         }
     }
+
+    public record ErrorResponse(int Status, String mensaje, LocalDateTime timestamp) {}
 }

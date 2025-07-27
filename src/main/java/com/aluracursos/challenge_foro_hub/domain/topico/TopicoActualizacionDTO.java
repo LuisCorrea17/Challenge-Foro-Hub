@@ -1,9 +1,6 @@
 package com.aluracursos.challenge_foro_hub.domain.topico;
 
-import jakarta.validation.constraints.NotNull;
-
-public record DatosActualizacionTopico(
-    @NotNull Long id,
+public record TopicoActualizacionDTO(
     String titulo,
     String mensaje,
     Estado estado

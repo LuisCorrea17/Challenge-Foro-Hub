@@ -1,9 +1,8 @@
 package com.aluracursos.challenge_foro_hub.domain.topico;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.aluracursos.challenge_foro_hub.domain.usuario.Usuario;
@@ -18,29 +17,35 @@ public class TopicoService {
     @Autowired
     private TopicoRepository topicoRepository;
 
-    public DatosDetalleTopico nuevoTopico(DatosRegistroTopico datos) {
+    public TopicoDetalleDTO nuevoTopico(TopicoRegistroDTO datos) {
         Usuario usuario = usuarioRepository.findById(datos.usuarioId()).get();
         Topico topico = new Topico(datos, usuario);
         topicoRepository.save(topico);
-        return new DatosDetalleTopico(topico);
+        return new TopicoDetalleDTO(topico);
     }
 
-    public List<DatosDetalleTopico> listarTopicos() {
-        var topicos = topicoRepository.listarTopicos();
-        return topicos.stream()
-            .map(t -> new DatosDetalleTopico(t))
-            .collect(Collectors.toList());
+    public Page<TopicoDetalleDTO> listarTopicos(Pageable paginacion) {
+        var page = topicoRepository.listarTopicos(paginacion);
+        return page.map(TopicoDetalleDTO::new);
     }
 
-    public DatosDetalleTopico actualizarTopico(DatosActualizacionTopico datos) {
-        var topico = topicoRepository.getReferenceById(datos.id());
+    public TopicoDetalleDTO actualizarTopico(Long id, TopicoActualizacionDTO datos) {
+        var topico = topicoRepository.getReferenceById(id);
         topico.actualizarInformacion(datos);
-        return new DatosDetalleTopico(topico);
+        return new TopicoDetalleDTO(topico);
     }
 
     public void eliminarTopico(Long id) {
         var topico = topicoRepository.getReferenceById(id);
         topico.eliminar();
     }
+
+    public TopicoDetalleDTO detallarTopico(Long id) {
+        var topico = topicoRepository.getReferenceById(id);
+        return new TopicoDetalleDTO(topico);
+    }
+
+    //TODO: Validar que no se pueda eliminar un topico que no exista ni que que ya se haya eliminado
+    //TODO: Validar que no se pueda hacer get ni actualizar un topico ya eliminado
 
 }

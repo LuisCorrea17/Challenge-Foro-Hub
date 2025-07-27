@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.aluracursos.challenge_foro_hub.domain.usuario.DatosDetalleUsuario;
-import com.aluracursos.challenge_foro_hub.domain.usuario.DatosRegistroUsuario;
+import com.aluracursos.challenge_foro_hub.domain.usuario.UsuarioDetalleDTO;
+import com.aluracursos.challenge_foro_hub.domain.usuario.UsuarioRegistroDTO;
 import com.aluracursos.challenge_foro_hub.domain.usuario.Usuario;
 import com.aluracursos.challenge_foro_hub.domain.usuario.UsuarioRepository;
 
@@ -23,10 +23,10 @@ public class UsuarioController {
     private UsuarioRepository repository;
 
     @PostMapping
-    public ResponseEntity<DatosDetalleUsuario> registrarNuevoUsuario(@RequestBody @Valid DatosRegistroUsuario datos, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<UsuarioDetalleDTO> registrarNuevoUsuario(@RequestBody @Valid UsuarioRegistroDTO datos, UriComponentsBuilder uriComponentsBuilder) {
         var usuario = new Usuario(datos);
         repository.save(usuario);
         var uri = uriComponentsBuilder.path("/usuarios/{username}").buildAndExpand(usuario.getEmail()).toUri();
-        return ResponseEntity.created(uri).body(new DatosDetalleUsuario(usuario));
+        return ResponseEntity.created(uri).body(new UsuarioDetalleDTO(usuario));
     }
 }
