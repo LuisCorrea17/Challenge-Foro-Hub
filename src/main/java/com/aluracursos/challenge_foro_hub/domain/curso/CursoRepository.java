@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface CursoRepository extends JpaRepository<Curso, Long>{
 
-    @Query("SELECT c FROM Curso c ORDER BY c.nombre")
+    @Query("SELECT c FROM Curso c")
     Page<Curso> listarCursos(Pageable paginacion);
 
 }

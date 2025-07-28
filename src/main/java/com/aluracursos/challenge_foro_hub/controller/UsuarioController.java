@@ -64,4 +64,6 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+    //TODO verificar que no se puedan loguear con usuarios ya eliminados y que tampoco se puedan recueperar sus datos al colocar su id en la url
+
 }

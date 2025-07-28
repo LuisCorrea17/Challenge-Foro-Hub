@@ -39,7 +39,7 @@ public class CursoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CursoDetalleDTO>> listarCurso(@PageableDefault(size = 10, sort = {"ultimaModificacion"}) Pageable paginacion) {
+    public ResponseEntity<Page<CursoDetalleDTO>> listarCurso(@PageableDefault(size = 10, sort = {"categoria"}) Pageable paginacion) {
         var page = cursoService.listarCursos(paginacion);
         return ResponseEntity.ok(page);
     }

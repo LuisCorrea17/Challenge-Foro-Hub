@@ -53,5 +53,6 @@ public class TopicoService {
 
     //TODO: Validar que no se pueda eliminar un topico que no exista ni que que ya se haya eliminado
     //TODO: Validar que no se pueda hacer get ni actualizar un topico ya eliminado
+    //TODO: Agregar log de cuando no existe un usuarios o curso al crear un topico
 
 }
