@@ -46,7 +46,6 @@ public class Topico {
     private Estado estado;
     @Column(name = "ultima_modificacion")
     private LocalDateTime ultimaActualizacion;
-    // private List<Respuesta> respuestas;
 
     public Topico(TopicoRegistroDTO datos, Usuario usuario, Curso curso) {
         this.id = null;
@@ -79,6 +78,11 @@ public class Topico {
 
     public void eliminar() {
         this.estado = Estado.DELETED;
+    }
+
+    public void marcarComoResuelto() {
+        this.estado = Estado.CLOSED;
+        this.ultimaActualizacion = LocalDateTime.now();
     }
 
 }
