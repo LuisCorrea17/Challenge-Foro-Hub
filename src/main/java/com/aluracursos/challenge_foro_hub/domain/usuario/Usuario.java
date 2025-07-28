@@ -37,10 +37,11 @@ public class Usuario implements UserDetails{
     private LocalDateTime fechaRegistro;
     private Boolean activo;
 
-    public Usuario(UsuarioRegistroDTO datos) {
+    public Usuario(UsuarioRegistroDTO datos, String contrasenaEncriptada) {
         this.id =  null;
         this.nombre = datos.nombre();
         this.email = datos.email();
+        this.contrasena = contrasenaEncriptada;
         this.fechaRegistro = LocalDateTime.now();
         this.activo = true;
     }
@@ -58,6 +59,34 @@ public class Usuario implements UserDetails{
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public void actualizarInformacion(UsuarioActualizacionDTO datos) {
+        if (datos.nombre() != null) {
+            this.nombre = datos.nombre();
+        }
+
+        if (datos.email() != null) {
+            this.email = datos.email();
+        }
+    }
+
+    public void actualizarInformacion(UsuarioActualizacionDTO datos, String contrasenaEncriptada) {
+        if (datos.nombre() != null) {
+            this.nombre = datos.nombre();
+        }
+
+        if (datos.email() != null) {
+            this.email = datos.email();
+        }
+
+        if (datos.contrasena() != null) {
+            this.contrasena = contrasenaEncriptada;
+        }
+    }
+
+    public void eliminar() {
+        this.activo = false;
     }
     
 }

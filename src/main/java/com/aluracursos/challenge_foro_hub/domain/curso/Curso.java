@@ -29,4 +29,19 @@ public class Curso {
         this.descripcion = datos.descripcion();
         this.categoria = datos.categoria();
     }
+
+    public void actualizarInformacion(CursoActualizacionDTO datos) {
+        if (datos.nombre() != null) {
+            this.nombre = datos.nombre();
+        }
+
+        if (datos.descripcion() != null) {
+            this.descripcion = datos.descripcion();
+        }
+
+        if (datos.categoria() != null) {
+            this.categoria = datos.categoria();
+        }
+    }
+    
 }

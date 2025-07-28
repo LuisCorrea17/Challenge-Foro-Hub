@@ -62,7 +62,7 @@ public class RespuestaService {
         return respuestas.map(RespuestaDetalleDTO::new);
     }
 
-    public RespuestaDetalleDTO detallarTopico(Long id) {
+    public RespuestaDetalleDTO detallarRespuesta(Long id) {
         var respuesta = respuestaRepository.getReferenceById(id);
         return new RespuestaDetalleDTO(respuesta); 
     }

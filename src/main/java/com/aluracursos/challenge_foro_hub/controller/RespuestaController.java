@@ -46,7 +46,7 @@ public class RespuestaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<RespuestaDetalleDTO> detallarRespuesta(@PathVariable Long id) {
-        var respuesta = respuestaService.detallarTopico(id);
+        var respuesta = respuestaService.detallarRespuesta(id);
         return ResponseEntity.ok(respuesta);
     }
 
