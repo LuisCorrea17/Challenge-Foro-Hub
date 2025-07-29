@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.aluracursos.challenge_foro_hub.domain.ValidacionException;
 import com.aluracursos.challenge_foro_hub.domain.curso.Curso;
 import com.aluracursos.challenge_foro_hub.domain.curso.CursoRepository;
 import com.aluracursos.challenge_foro_hub.domain.usuario.Usuario;
@@ -37,18 +38,27 @@ public class TopicoService {
 
     public TopicoDetalleDTO actualizarTopico(Long id, TopicoActualizacionDTO datos) {
         var topico = topicoRepository.getReferenceById(id);
+        validarTopico(topico);
         topico.actualizarInformacion(datos);
         return new TopicoDetalleDTO(topico);
     }
 
     public void eliminarTopico(Long id) {
         var topico = topicoRepository.getReferenceById(id);
+        validarTopico(topico);
         topico.eliminar();
     }
 
     public TopicoDetalleDTO detallarTopico(Long id) {
         var topico = topicoRepository.getReferenceById(id);
+        validarTopico(topico);
         return new TopicoDetalleDTO(topico);
+    }
+
+    public void validarTopico(Topico topico) {
+        if (topico.getEstado().equals(Estado.DELETED)) {
+            throw new ValidacionException("El topico se encuentra eliminado del sistema");
+        }
     }
 
     //TODO: Validar que no se pueda eliminar un topico que no exista ni que que ya se haya eliminado
