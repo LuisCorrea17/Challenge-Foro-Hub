@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,6 +33,12 @@ public class GestorDeErrores {
         var error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Topico con el id no encontrado", LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+
+    // @ExceptionHandler(UsernameNotFoundException.class)
+    // public ResponseEntity<ErrorResponse> gestionarErrorUsuarioNoEncontrado(UsernameNotFoundException ex) {
+    //     var error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Usuario no encontrado o inactivo", LocalDateTime.now());
+    //     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    // }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<DatosErrorValidacion>> gestionarError400(MethodArgumentNotValidException ex) {
