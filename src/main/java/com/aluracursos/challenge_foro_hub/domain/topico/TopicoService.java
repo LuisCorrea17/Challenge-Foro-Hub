@@ -1,14 +1,14 @@
 package com.aluracursos.challenge_foro_hub.domain.topico;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.aluracursos.challenge_foro_hub.domain.ValidacionException;
-import com.aluracursos.challenge_foro_hub.domain.curso.Curso;
 import com.aluracursos.challenge_foro_hub.domain.curso.CursoRepository;
-import com.aluracursos.challenge_foro_hub.domain.usuario.Usuario;
 import com.aluracursos.challenge_foro_hub.domain.usuario.UsuarioRepository;
 
 @Service
@@ -24,9 +24,15 @@ public class TopicoService {
     private CursoRepository cursoRepository;
 
     public TopicoDetalleDTO nuevoTopico(TopicoRegistroDTO datos) {
-        Usuario usuario = usuarioRepository.findById(datos.usuarioId()).get();
-        Curso curso = cursoRepository.findById(datos.cursoId()).get();
-        Topico topico = new Topico(datos, usuario, curso);
+        var usuario = usuarioRepository.findById(datos.usuarioId());
+        if (usuario.isEmpty()) {
+            throw new NoSuchElementException("Usuario no encontrado");
+        }
+        var curso = cursoRepository.findById(datos.cursoId());
+        if (curso.isEmpty()) {
+            throw new NoSuchElementException("Curso no encontrado");
+        }
+        Topico topico = new Topico(datos, usuario.get(), curso.get());
         topicoRepository.save(topico);
         return new TopicoDetalleDTO(topico);
     }
@@ -60,9 +66,5 @@ public class TopicoService {
             throw new ValidacionException("El topico se encuentra eliminado del sistema");
         }
     }
-
-    //TODO: Validar que no se pueda eliminar un topico que no exista ni que que ya se haya eliminado
-    //TODO: Validar que no se pueda hacer get ni actualizar un topico ya eliminado
-    //TODO: Agregar log de cuando no existe un usuarios o curso al crear un topico
 
 }

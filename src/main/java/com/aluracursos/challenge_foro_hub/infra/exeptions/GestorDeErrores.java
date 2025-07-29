@@ -2,6 +2,7 @@ package com.aluracursos.challenge_foro_hub.infra.exeptions;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,12 @@ public class GestorDeErrores {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponse> gestionarErrorIdNoEncontrado(EntityNotFoundException ex) {
         var error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Topico con el id no encontrado", LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ErrorResponse> gestionarErrorEntidadNoEncontrada(NoSuchElementException ex) {
+        var error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
