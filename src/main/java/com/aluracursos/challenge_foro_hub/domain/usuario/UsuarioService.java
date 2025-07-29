@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.aluracursos.challenge_foro_hub.domain.ValidacionException;
+
 @Service
 public class UsuarioService {
 
@@ -29,11 +31,13 @@ public class UsuarioService {
 
     public UsuarioDetalleDTO detallarUsuario(Long id) {
         var usuario = usuarioRepository.getReferenceById(id);
+        validarUsuario(usuario);
         return new UsuarioDetalleDTO(usuario);
     }
 
     public UsuarioDetalleDTO actualizarUsuario(Long id, UsuarioActualizacionDTO datos) {
         var usuario = usuarioRepository.getReferenceById(id);
+        validarUsuario(usuario);
         if (datos.contrasena() != null) {
             var contrasenaEncriptada = passwordEncoder.encode(datos.contrasena());
             usuario.actualizarInformacion(datos, contrasenaEncriptada);
@@ -45,7 +49,13 @@ public class UsuarioService {
 
     public void eliminarUsuario(Long id) {
         var usuario = usuarioRepository.getReferenceById(id);
+        validarUsuario(usuario);
         usuario.eliminar();
     }
 
+    public void validarUsuario(Usuario usuario) {
+        if (!usuario.getActivo()) {
+            throw new ValidacionException("Usuario inactivo dentro del sistema");
+        }
+    }
 }
