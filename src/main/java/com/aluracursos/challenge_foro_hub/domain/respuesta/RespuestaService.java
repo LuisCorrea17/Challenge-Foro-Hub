@@ -1,13 +1,15 @@
 package com.aluracursos.challenge_foro_hub.domain.respuesta;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.aluracursos.challenge_foro_hub.domain.topico.Topico;
+import com.aluracursos.challenge_foro_hub.domain.ValidacionException;
+import com.aluracursos.challenge_foro_hub.domain.topico.Estado;
 import com.aluracursos.challenge_foro_hub.domain.topico.TopicoRepository;
-import com.aluracursos.challenge_foro_hub.domain.usuario.Usuario;
 import com.aluracursos.challenge_foro_hub.domain.usuario.UsuarioRepository;
 
 @Service
@@ -23,9 +25,15 @@ public class RespuestaService {
     private UsuarioRepository usuarioRepository;
 
     public RespuestaDetalleDTO nuevaRespuesta(RespuestaRegistroDTO datos) {
-        Usuario usuario = usuarioRepository.findById(datos.usuarioId()).get();
-        Topico topico = topicoRepository.findById(datos.topicoId()).get();
-        Respuesta respuesta = new Respuesta(datos, topico, usuario);
+        var topico = topicoRepository.findById(datos.topicoId());
+        if (topico.isEmpty() || topico.get().getEstado() == Estado.DELETED) {
+            throw new NoSuchElementException("Topico no encontrado o eliminado");
+        }
+        var usuario = usuarioRepository.findById(datos.usuarioId());
+        if (usuario.isEmpty() || !usuario.get().getActivo()) {
+            throw new NoSuchElementException("Usuario no encontrado o inactivo");
+        }
+        Respuesta respuesta = new Respuesta(datos, topico.get(), usuario.get());
         respuestaRepository.save(respuesta);
         return new RespuestaDetalleDTO(respuesta);
     }
@@ -37,6 +45,7 @@ public class RespuestaService {
 
     public RespuestaDetalleDTO actualizarRespuesta(Long id, RespuestaActualizacionDTO datos) {
         var respuesta = respuestaRepository.getReferenceById(id);
+        validarRespuesta(respuesta);
         respuesta.actualizarInformacion(datos);
 
         if (datos.solucion()) {
@@ -49,6 +58,7 @@ public class RespuestaService {
 
 	public void eliminarRespuesta(Long id) {
 		var respuesta = respuestaRepository.getReferenceById(id);
+        validarRespuesta(respuesta);
         respuesta.eliminar();
 	}
 
@@ -64,9 +74,14 @@ public class RespuestaService {
 
     public RespuestaDetalleDTO detallarRespuesta(Long id) {
         var respuesta = respuestaRepository.getReferenceById(id);
+        validarRespuesta(respuesta);
         return new RespuestaDetalleDTO(respuesta); 
     }
 
-
+    public void validarRespuesta(Respuesta respuesta) {
+        if (respuesta.isEliminado()) {
+            throw new ValidacionException("La respuesta se encuentra eliminada del sistema");
+        }
+    }
 
 }

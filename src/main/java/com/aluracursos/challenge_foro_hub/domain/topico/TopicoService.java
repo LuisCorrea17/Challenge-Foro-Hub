@@ -25,8 +25,8 @@ public class TopicoService {
 
     public TopicoDetalleDTO nuevoTopico(TopicoRegistroDTO datos) {
         var usuario = usuarioRepository.findById(datos.usuarioId());
-        if (usuario.isEmpty()) {
-            throw new NoSuchElementException("Usuario no encontrado");
+        if (usuario.isEmpty() || !usuario.get().getActivo()) {
+            throw new NoSuchElementException("Usuario no encontrado o inactivo");
         }
         var curso = cursoRepository.findById(datos.cursoId());
         if (curso.isEmpty()) {
